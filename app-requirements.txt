@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+pydantic[dotenv]
+pydantic-settings
+python-multipart
+boto3
+requests
+watchdog
+black
+isort
+fastapi_utilities
+fastapi-utils
+typing-inspect

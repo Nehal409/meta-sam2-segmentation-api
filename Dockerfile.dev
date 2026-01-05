@@ -1,0 +1,39 @@
+# Stage 1: Base dependency layer
+# Only re-run Stage 1 if base-requirements.txt itself changes.
+FROM python:3.12.8-slim AS base-deps
+
+WORKDIR /app
+
+# Copy only base requirements to leverage Docker cache
+COPY base-requirements.txt ./
+RUN pip install --no-cache-dir -r base-requirements.txt
+
+# Stage 2: Final image with app dependencies
+FROM python:3.12.8-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    libgl1 \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy pre-installed base packages
+COPY --from=base-deps /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY --from=base-deps /usr/local/bin /usr/local/bin
+
+# Copy and install app-level packages
+COPY app-requirements.txt ./
+RUN pip install --no-cache-dir -r app-requirements.txt
+
+# Copy application code
+COPY . .
+
+RUN chmod +x entrypoint.sh
+
+# Set entrypoint to download weights
+ENTRYPOINT ["./entrypoint.sh"]
+
+# Start the server
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
