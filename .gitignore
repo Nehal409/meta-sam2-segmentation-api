@@ -27,3 +27,6 @@ env/
 
 # Assets
 assets/
+
+# VSCode
+.vscode/

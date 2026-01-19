@@ -2,6 +2,7 @@ from uuid import uuid4
 
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
+from sqlalchemy import false
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
@@ -93,7 +94,7 @@ def list_jobs(
             query = query.filter(Job.status == status_enum)
         except KeyError:
             # Invalid status value, return empty result
-            query = query.filter(False)
+            query = query.filter(false())
 
     # Get total count
     total = query.count()
