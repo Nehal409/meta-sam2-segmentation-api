@@ -1,5 +1,6 @@
 from typing import Optional
 
+from pydantic import Field
 from pydantic_settings import BaseSettings
 
 
@@ -10,6 +11,9 @@ class Settings(BaseSettings):
     sam_model_path: str
     sam_model_s3_url: str
     base_url: str
+    
+    # API Security
+    api_key: str = Field(..., description="API key for authentication")
 
     # Database settings
     postgres_user: str

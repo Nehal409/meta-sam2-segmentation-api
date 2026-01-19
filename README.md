@@ -78,11 +78,14 @@ log_level=INFO
 environment=development
 base_url=http://localhost:8000
 
+# API Security
+api_key=your-secret-api-key-here
+
 # SAM Model
 sam_model_path=/app/models/weights/sam_vit_h.pth
 sam_model_s3_url=https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
 
-# Database (defaults shown, override as needed)
+# Database
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
 POSTGRES_DB=sam_segmentation
@@ -94,17 +97,32 @@ POSTGRES_PORT=5432
 
 ## API Endpoints
 
+> **Note:** All endpoints except `/health` require API key authentication via the `X-API-Key` header.
+
+### Authentication
+
+All API endpoints (except `/health`) require an API key to be provided in the request header:
+
+```
+X-API-Key: your-secret-api-key-here
+```
+
 ### Create Job
 
-Submit a new segmentation job.
+Submit a new segmentation job. A unique UUID will be automatically generated for each job.
 
 **POST** `/api/v1/jobs`
+
+**Headers:**
+```
+X-API-Key: your-secret-api-key-here
+Content-Type: application/json
+```
 
 **Request Body:**
 ```json
 {
-  "image_url": "https://cdn.example.com/images/sample.jpg",
-  "uuid": "optional-custom-uuid"  // Optional, auto-generated if not provided
+  "image_url": "https://cdn.example.com/images/sample.jpg"
 }
 ```
 
@@ -128,6 +146,11 @@ Submit a new segmentation job.
 Retrieve job status and results.
 
 **GET** `/api/v1/jobs/{job_uuid}`
+
+**Headers:**
+```
+X-API-Key: your-secret-api-key-here
+```
 
 **Response:** `200 OK`
 ```json
@@ -174,6 +197,11 @@ List all jobs with pagination and optional status filter.
 
 **GET** `/api/v1/jobs?page=1&page_size=10&status=COMPLETED`
 
+**Headers:**
+```
+X-API-Key: your-secret-api-key-here
+```
+
 **Query Parameters:**
 - `page` (optional): Page number (default: 1)
 - `page_size` (optional): Items per page (default: 10, max: 100)
@@ -195,11 +223,18 @@ Delete a job from the database.
 
 **DELETE** `/api/v1/jobs/{job_uuid}`
 
+**Headers:**
+```
+X-API-Key: your-secret-api-key-here
+```
+
 **Response:** `204 No Content`
 
 ### Health Check
 
 **GET** `/health`
+
+> **Note:** This endpoint is public and does not require authentication.
 
 **Response:** `200 OK`
 ```json
@@ -256,7 +291,9 @@ meta-sam-segmentation-api/
 * **Segmentation Logic:** `app/services/segmentation.py`
 * **Job Processing:** `app/services/job_processor.py` (background tasks)
 * **Database Models:** `app/models/job.py`
-* **API Endpoints:** `app/main.py`
+* **API Routers:** `app/api/v1/` (jobs, health)
+* **Security:** `app/core/security.py` (API key authentication)
+* **Main App:** `app/main.py` (minimal setup with router includes)
 * **Model Weights:** Downloaded at container startup to `/models/weights/`
 * **Mask Storage:** Output masks saved locally to `assets/{uuid}/mask_images/`
 * **FastAPI Static Serving:** Masks served via `/assets/{uuid}/mask_images/mask_XXX.png`
