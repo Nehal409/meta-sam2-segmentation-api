@@ -1,7 +1,5 @@
 # Segmentation Status constants
+PENDING = "PENDING"
 COMPLETED = "COMPLETED"
 ERROR = "ERROR"
 PROCESSING = "PROCESSING"
-
-# Headers
-X_API_KEY = "x-api-key"
