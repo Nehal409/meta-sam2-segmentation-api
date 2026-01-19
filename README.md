@@ -83,7 +83,7 @@ api_key=your-secret-api-key-here
 
 # SAM Model
 sam_model_path=/app/models/weights/sam_vit_h.pth
-sam_model_s3_url=https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
+sam_model_download_url=https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
 
 # Database
 POSTGRES_USER=postgres
