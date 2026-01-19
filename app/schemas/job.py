@@ -1,34 +1,16 @@
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Field, HttpUrl, field_validator
+from pydantic import BaseModel, Field
 
 
 class JobCreate(BaseModel):
     """Schema for creating a new job"""
 
-    image_url: HttpUrl = Field(
+    image_url: str = Field(
         ...,
         description="URL of the image to segment",
         examples=["https://example.com/image.jpg"],
     )
-
-    @field_validator("image_url")
-    @classmethod
-    def validate_image_url(cls, v: HttpUrl) -> HttpUrl:
-        """Validate image URL format and protocol"""
-        url_str = str(v)
-
-        # Ensure it's HTTP or HTTPS
-        if not url_str.startswith(("http://", "https://")):
-            raise ValueError("Image URL must use http:// or https:// protocol")
-
-        # Check for common image extensions
-        image_extensions = (".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".tiff")
-        if not any(url_str.lower().endswith(ext) for ext in image_extensions):
-            # Don't fail, just log a warning - some URLs might not have extensions
-            pass
-
-        return v
 
 
 class JobResponse(BaseModel):

@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.core.logger import logger
 from app.core.security import verify_api_key
-from app.models.job import Job
+from app.models.job import Job, JobStatus
 from app.schemas.job import JobCreate, JobListResponse, JobResponse
 from app.services.job_processor import process_segmentation_job
 
@@ -35,7 +35,7 @@ def create_job(
     job = Job(
         uuid=job_uuid,
         image_url=str(job_data.image_url),
-        status="PENDING",
+        status=JobStatus.PENDING,
     )
 
     db.add(job)
@@ -88,7 +88,12 @@ def list_jobs(
 
     # Filter by status if provided
     if status:
-        query = query.filter(Job.status == status.upper())
+        try:
+            status_enum = JobStatus[status.upper()]
+            query = query.filter(Job.status == status_enum)
+        except KeyError:
+            # Invalid status value, return empty result
+            query = query.filter(False)
 
     # Get total count
     total = query.count()
