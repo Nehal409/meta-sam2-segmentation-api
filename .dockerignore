@@ -1,0 +1,16 @@
+# Byte-compiled / cache
+__pycache__/
+
+# Virtual environments
+.venv/
+venv/
+
+# IDEs and editors
+.vscode/
+# Git and metadata
+.git/
+.gitignore
+
+# Misc
+dist/
+build/
