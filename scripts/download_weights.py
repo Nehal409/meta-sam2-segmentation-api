@@ -5,7 +5,7 @@ import requests
 from app.core.config import settings
 from app.core.logger import logger
 
-WEIGHT_S3_URL = settings.sam_model_s3_url
+WEIGHT_DOWNLOAD_URL = settings.sam_model_download_url
 WEIGHT_PATH = settings.sam_model_path
 TMP_PATH = WEIGHT_PATH + ".tmp"
 
@@ -17,9 +17,9 @@ def download_weights():
         logger.info("Model weights already present. Skipping download.")
         return
 
-    logger.info(f"Downloading SAM model weights from {WEIGHT_S3_URL}")
+    logger.info(f"Downloading SAM model weights from {WEIGHT_DOWNLOAD_URL}")
     try:
-        with requests.get(WEIGHT_S3_URL, stream=True, timeout=300) as r:
+        with requests.get(WEIGHT_DOWNLOAD_URL, stream=True, timeout=300) as r:
             r.raise_for_status()
             with open(TMP_PATH, "wb") as f:
                 for chunk in r.iter_content(chunk_size=8192):

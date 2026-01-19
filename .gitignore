@@ -19,11 +19,11 @@ env/
 # Environment variables
 .env
 
-# Docker
-.dockerignore
-
 # Model Weights
 *.pth
 
 # Assets
 assets/
+
+# VSCode
+.vscode/
