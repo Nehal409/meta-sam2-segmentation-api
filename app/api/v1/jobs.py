@@ -4,9 +4,9 @@ from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
-from app.core.security import verify_api_key
 from app.core.database import get_db
 from app.core.logger import logger
+from app.core.security import verify_api_key
 from app.models.job import Job
 from app.schemas.job import JobCreate, JobListResponse, JobResponse
 from app.services.job_processor import process_segmentation_job
@@ -58,7 +58,7 @@ def get_job(
 ):
     """
     Get job status and results by UUID.
-    
+
     Returns the job details including status and segmentation results (if available).
     """
     job = db.query(Job).filter(Job.uuid == job_uuid).first()
@@ -113,7 +113,7 @@ def delete_job(
 ):
     """
     Delete a job by UUID.
-    
+
     This will remove the job from the database. The associated mask files
     will be cleaned up by the scheduled cleanup task.
     """
@@ -130,4 +130,3 @@ def delete_job(
     logger.info(f"Deleted job {job_uuid}")
 
     return JSONResponse(status_code=204, content=None)
-

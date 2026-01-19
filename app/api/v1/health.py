@@ -1,4 +1,5 @@
 """Health check endpoint"""
+
 from fastapi import APIRouter
 
 from app.core.logger import logger
@@ -14,4 +15,3 @@ def health_check():
     """
     logger.info("Health check called.")
     return {"status": "ok"}
-
