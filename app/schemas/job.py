@@ -6,12 +6,16 @@ from pydantic import BaseModel, Field, HttpUrl
 
 class JobCreate(BaseModel):
     """Schema for creating a new job"""
+
     image_url: HttpUrl = Field(..., description="URL of the image to segment")
-    uuid: Optional[str] = Field(default_factory=lambda: str(uuid4()), description="Optional UUID for the job")
+    uuid: Optional[str] = Field(
+        default_factory=lambda: str(uuid4()), description="Optional UUID for the job"
+    )
 
 
 class JobResponse(BaseModel):
     """Schema for job response"""
+
     id: int
     uuid: str
     image_url: str
@@ -28,8 +32,8 @@ class JobResponse(BaseModel):
 
 class JobListResponse(BaseModel):
     """Schema for listing jobs"""
+
     jobs: List[JobResponse]
     total: int
     page: int = 1
     page_size: int = 10
-

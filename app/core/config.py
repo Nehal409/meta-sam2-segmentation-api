@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     sam_model_path: str
     sam_model_s3_url: str
     base_url: str
-    
+
     # Database settings
     postgres_user: str
     postgres_password: str
